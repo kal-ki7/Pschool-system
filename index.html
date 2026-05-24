@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <title>ፒላር ት/ቤት ማኔጅመንት ሲስተም</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; background-color: #f4f6f9; }
+        .container { max-width: 600px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); margin: auto; }
+        h1, h2 { color: #2c3e50; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #34495e; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
+        .btn { color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 5px; }
+        .btn-blue { background-color: #3498db; }
+        .btn-blue:hover { background-color: #2980b9; }
+        .btn-green { background-color: #2ecc71; margin-top: 15px; }
+        .btn-green:hover { background-color: #27ae60; }
+        .report-box { margin-top: 25px; padding: 20px; background: #eef2f7; border-left: 5px solid #3498db; border-radius: 4px; line-height: 1.6; }
+        .box-section { border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; background: #fff; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ፒላር ትምህርት ቤት ዲጂታል ሲስተም</h1>
+    
+    <!-- 1. አዲስ ተማሪ መመዝገቢያ ፎርም -->
+    <div class="box-section">
+        <h2>1. አዲስ ተማሪ መመዝገቢያ</h2>
+        <div class="form-group">
+            <label>የተማሪ ሙሉ ስም፡</label>
+            <input type="text" id="fullName" placeholder="ለምሳሌ፡ ዮናስ አልሙ">
+        </div>
+        <div class="form-group">
+            <label>ክፍል፡</label>
+            <select id="studentGrade">
+                <option value="Grade 9A">Grade 9A</option>
+                <option value="Grade 10B">Grade 10B</option>
+                <option value="Grade 11C">Grade 11C</option>
+                <option value="Grade 12B">Grade 12B</option>
+            </select>
+        </div>
+        <button class="btn btn-blue" onclick="sendStudentToServer()">ተማሪውን በቋሚነት መዝግብ</button>
+    </div>
+
+    <!-- 2. ውጤት ማሳያ ክፍል -->
+    <div class="box-section">
+        <h2>2. የሪፖርት ካርድ ማውጫ</h2>
+        <div class="form-group">
+            <label for="studentSelect">እባክዎ የተማሪ ስም ይምረጡ፡</label>
+            <select id="studentSelect">
+                <!-- ስሞች ከፋይል መጥተው እዚህ ይገባሉ -->
+            </select>
+        </div>
+        <button class="btn btn-green" onclick="showReport()">ሪፖርት ካርድ አውጣ</button>
+
+        <div id="reportOutput" class="report-box" style="display: none;">
+            <strong>የተማሪው ስም:</strong> <span id="resName"></span> <br>
+            <strong>ክፍል:</strong> <span id="resGrade"></span> <br>
+            <div style="margin: 10px 0; border-top: 1px solid #ccc;"></div>
+            <div id="gradesDetails"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let globalStudents = [];
+    let globalGrades = [];
+
+    async function loadDataFromServer() {
+        let studentResponse = await fetch('/api/students');
+        globalStudents = await studentResponse.json();
+
+        let gradeResponse = await fetch('/api/grades');
+        globalGrades = await gradeResponse.json();
+
+        let select = document.getElementById('studentSelect');
+        select.innerHTML = "";
+        
+        globalStudents.forEach(student => {
+            let option = document.createElement('option');
+            option.value = student.studentId;
+            option.innerText = `${student.fullName} (${student.studentId})`;
+            select.appendChild(option);
+        });
+    }
+
+    // አዲሱን ተማሪ ወደ ኖድ ሰርቨር የሚልከው እውነተኛ ትዕዛዝ
+    async function sendStudentToServer() {
+        let nameInput = document.getElementById("fullName");
+        let gradeInput = document.getElementById("studentGrade");
+
+        if (nameInput.value === "") {
+            alert("እባክዎ የተማሪ ስም ያስገቡ!");
+            return;
+        }
+
+        let studentData = {
+            fullName: nameInput.value,
+            studentGrade: gradeInput.value
+        };
+
+        // መረጃውን ወደ ሰርቨር መላክ
+        let response = await fetch('/api/students', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(studentData)
+        });
+
+        let result = await response.json();
+        if(result.success) {
+            alert(`${nameInput.value} በተሳካ ሁኔታ ዳታቤዝ ውስጥ ተመዝግቧል!`);
+            nameInput.value = ""; // ሳጥኑን አጽዳ
+            loadDataFromServer(); // በገጹ ላይ ያለውን ዝርዝር በራሱ አድስ
+        }
+    }
+
+    function showReport() {
+        let selectedId = document.getElementById('studentSelect').value;
+        let student = globalStudents.find(s => s.studentId === selectedId);
+        if (!student) return;
+
+        document.getElementById('resName').innerText = student.fullName;
+        document.getElementById('resGrade').innerText = student.studentGrade;
+
+        let studentGrades = globalGrades.filter(g => g.studentId === selectedId);
+        let gradesHTML = "";
+        
+        if(studentGrades.length === 0) {
+            gradesHTML = "<p style='color:orange;'>ለዚህ ተማሪ እስካሁን ምንም አይነት የፈተና ውጤት አልተመዘገበም!</p>";
+        } else {
+            studentGrades.forEach(g => {
+                gradesHTML += `<strong>${g.subjectName}:</strong> ${g.studentScore} ከ 30 (${g.examType})<br>`;
+            });
+        }
+
+        document.getElementById('gradesDetails').innerHTML = gradesHTML;
+        document.getElementById('reportOutput').style.display = 'block';
+    }
+
+    loadDataFromServer();
+</script>
+
+</body>
+</html>

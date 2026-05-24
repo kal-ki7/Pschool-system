@@ -1,0 +1,26 @@
+[
+  {
+    "studentId": "REG/003",
+    "subjectName": "ማትስ",
+    "examType": "Mid Exam",
+    "studentScore": 28
+  },
+  {
+    "studentId": "REG/003",
+    "subjectName": "ፊዚክስ",
+    "examType": "Mid Exam",
+    "studentScore": 24
+  },
+  {
+    "studentId": "REG/003",
+    "subjectName": "ማትስ",
+    "examType": "Mid Exam",
+    "studentScore": 28
+  },
+  {
+    "studentId": "REG/003",
+    "subjectName": "ፊዚክስ",
+    "examType": "Mid Exam",
+    "studentScore": 24
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "studentId": "REG/003",
+    "fullName": "አቤል በቀለ",
+    "studentGrade": "Grade 11C"
+  },
+  {
+    "studentId": "REG/004",
+    "fullName": "ኪያ ቶሎሳ",
+    "studentGrade": "Grade 12B"
+  },
+  {
+    "studentId": "REG/005",
+    "fullName": "ዝናቡ",
+    "studentGrade": "Grade 12B"
+  },
+  {
+    "studentId": "REG/006",
+    "fullName": "ዮናስ አለሙ",
+    "studentGrade": "Grade 11C"
+  }
+]
