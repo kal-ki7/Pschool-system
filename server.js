@@ -1,60 +1,31 @@
 const express = require('express');
 const fs = require('fs');
-const path = require('path');
-
 const app = express();
-const PORT = 3000;
+const port = 3000;
 
-const FILE_NAME = 'students.json';
-const GRADES_FILE = 'grades.json';
+// ይህ ተጠቃሚው የሚልክልንን መረጃ (form data) እንዲያነብ ይረዳል
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json());
+// የሎጊን ገጽን ለማሳየት
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/login.html');
+});
 
-// መረጃዎችን ከፋይል የማንበብ ተግባር
-function loadStudents() {
-    if (fs.existsSync(FILE_NAME)) {
-        return JSON.parse(fs.readFileSync(FILE_NAME, 'utf8'));
+// የሎጊን መረጃን ለማጣራት
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    const users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
+
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        res.send("እንኳን ደህና መጡ! ወደ ዋናው ገጽ ገብተዋል፡ " + user.username);
+    } else {
+        res.send("የይለፍ ቃል ወይም የተጠቃሚ ስም ስህተት ነው። <a href='/login'>እንደገና ይሞክሩ</a>");
     }
-    return [];
-}
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/api/students', (req, res) => {
-    res.json(loadStudents());
-});
-
-app.get('/api/grades', (req, res) => {
-    if (fs.existsSync(GRADES_FILE)) {
-        return res.json(JSON.parse(fs.readFileSync(GRADES_FILE, 'utf8')));
-    }
-    res.json([]);
-});
-
-// አዲስ ተማሪ ከዌብሳይት ሲላክ ተቀብሎ ፋይል ውስጥ የመጻፍ ትዕዛዝ (API POST)
-app.post('/api/students', (req, res) => {
-    let studentsList = loadStudents();
-    
-    // አዲስ መለያ ቁጥር በራሱ እንዲፈጠር ማድረግ (ለምሳሌ REG/005...)
-    let newId = "REG/00" + (studentsList.length + 3); 
-    
-    let newStudent = {
-        studentId: newId,
-        fullName: req.body.fullName,
-        studentGrade: req.body.studentGrade
-    };
-    
-    studentsList.push(newStudent);
-    fs.writeFileSync(FILE_NAME, JSON.stringify(studentsList, null, 2));
-    
-    console.log(`[ሲስተም] አዲስ ተማሪ ተመዝግቧል: ${newStudent.fullName}`);
-    res.json({ success: true, student: newStudent });
-});
-
-app.listen(PORT, () => {
-    console.log(`========================================`);
-    console.log(` ሰርቨሩ በድጋሚ ተነስቷል!`);
-    console.log(`========================================`);
+// ዋናው ሰርቨር መነሻ
+app.listen(port, () => {
+    console.log(`ሰርቨሩ በ http://localhost:${port} እየሰራ ነው`);
 });

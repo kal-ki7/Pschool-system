@@ -1,22 +1,22 @@
 [
   {
-    "studentId": "REG/003",
+    "studentId": "REG/001",
     "fullName": "አቤል በቀለ",
-    "studentGrade": "Grade 11C"
+    "studentGrade": "Grade 1A"
+  },
+  {
+    "studentId": "REG/002",
+    "fullName": "ኪያ ቶሎሳ",
+    "studentGrade": "Grade 2A"
+  },
+  {
+    "studentId": "REG/003",
+    "fullName": "ዝናቡ",
+    "studentGrade": "Grade 3A"
   },
   {
     "studentId": "REG/004",
-    "fullName": "ኪያ ቶሎሳ",
-    "studentGrade": "Grade 12B"
-  },
-  {
-    "studentId": "REG/005",
-    "fullName": "ዝናቡ",
-    "studentGrade": "Grade 12B"
-  },
-  {
-    "studentId": "REG/006",
     "fullName": "ዮናስ አለሙ",
-    "studentGrade": "Grade 11C"
+    "studentGrade": "Grade 4A"
   }
 ]
