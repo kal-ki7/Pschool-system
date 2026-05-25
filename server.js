@@ -23,9 +23,16 @@ app.post('/login', (req, res) => {
     const user = users.find(u => u.username === username && u.password === password);
 
     if (user) {
-        res.send("እንኳን ደህና መጡ! ወደ ዋናው ገጽ ገብተዋል፡ " + user.username);
+        // መረጃው ትክክል ከሆነ ወደ ዳሽቦርድ እንልከዋለን
+        res.send("እንኳን ደህና መጡ! ወደ ዳሽቦርድ ለመሄድ <a href='/dashboard'>እዚህ ይጫኑ</a>");
     } else {
-        res.send("የይለፍ ቃል ወይም የተጠቃሚ ስም ስህተት ነው። <a href='/login'>እንደገና ይሞክሩ</a>");
+        // መረጃው ስህተት ከሆነ ለስህተቱ የሚሆን የተለየ መልእክት
+        res.send(`
+            <div style="color: red; text-align: center; margin-top: 50px;">
+                <h2>የተጠቃሚ ስም ወይም የይለፍ ቃል ስህተት ነው!</h2>
+                <a href='/login'>ወደ መግቢያ ገጽ ተመለስ</a>
+            </div>
+        `);
     }
 });
 
