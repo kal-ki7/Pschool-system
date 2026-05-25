@@ -7,6 +7,10 @@ const port = 3000;
 app.use(express.urlencoded({ extended: true }));
 
 // የሎጊን ገጽን ለማሳየት
+// ይህ መነሻ ገጹን (/) ወደ ሎጊን ገጽ ይመራዋል
+app.get('/', (req, res) => {
+    res.redirect('/login');
+});
 app.get('/login', (req, res) => {
     res.sendFile(__dirname + '/login.html');
 });
