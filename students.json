@@ -18,9 +18,17 @@
     "studentId": "REG/004",
     "fullName": "ዮናስ አለሙ",
     "studentGrade": "Grade 4A"
+  },
+  {
+    "id": 1,
+    "name": "አበበ ከበደ",
+    "grade": "10",
+    "age": 16
+  },
+  {
+    "id": 2,
+    "name": "ቃልኪዳን ተክለ",
+    "grade": "12",
+    "age": 18
   }
-  [
-    {"id": 1, "name": "አበበ ከበደ", "grade": "10", "age": 16},
-    {"id": 2, "name": "ቃልኪዳን ተክለ", "grade": "12", "age": 18}
-]
 ]

@@ -14,7 +14,31 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(__dirname + '/login.html');
 });
+// የተማሪዎች ዝርዝር ገጽ
+app.get('/dashboard', (req, res) => {
+    const students = JSON.parse(fs.readFileSync('students.json', 'utf8'));
+    
+    let tableRows = students.map(s => `
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;">${s.fullName || s.name}</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">${s.studentGrade || s.grade}</td>
+        </tr>
+    `).join('');
 
+    res.send(`
+        <h2 style="text-align: center;">የተማሪዎች መረጃ ዳሽቦርድ</h2>
+        <table style="width: 80%; margin: 20px auto; border-collapse: collapse;">
+            <tr style="background-color: #f2f2f2;">
+                <th style="padding: 10px; border: 1px solid #ddd;">ሙሉ ስም</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">ክፍል</th>
+            </tr>
+            ${tableRows}
+        </table>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href='/login'>ከሲስተሙ ውጣ (Logout)</a>
+        </div>
+    `);
+});
 // የሎጊን መረጃን ለማጣራት
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
